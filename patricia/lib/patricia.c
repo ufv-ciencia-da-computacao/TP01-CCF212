@@ -64,9 +64,33 @@ int pat_search(Patricia patricia, Item key) {
     return strcmp(key, patricia->node.key) == 0 ? 1:0;
   } 
 
+
+  printf("%d", patricia->node.node_internal.index);
+  printf("%c\n", patricia->node.node_internal.character);
+
   if (key[patricia->node.node_internal.index] <= patricia->node.node_internal.character) 
     return pat_search(patricia->node.node_internal.left, key);
   else return pat_search(patricia->node.node_internal.right, key);
+}
+
+void pat_print(Patricia patricia) {
+  if (patricia == NULL) return;
+  
+  if (type_node(patricia) == internal) pat_print(patricia->node.node_internal.left);
+  if (type_node(patricia) == external) puts(patricia->node.key); 
+  if (type_node(patricia) == internal) pat_print(patricia->node.node_internal.right);
+}
+
+static int word_count(Patricia patricia, int count) {
+  if (patricia == NULL) return count;
+  
+  if (type_node(patricia) == internal) count = word_count(patricia->node.node_internal.left, count);
+  if (type_node(patricia) == external) return count+1;
+  if (type_node(patricia) == internal) count = word_count(patricia->node.node_internal.right, count);
+}
+
+int pat_word_count (Patricia patricia) {
+  return word_count(patricia, 0);
 }
 
 Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple) {

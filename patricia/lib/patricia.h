@@ -33,7 +33,8 @@ typedef struct pat_node_str {
 
 int type_node(Patricia p);
 void pat_init(Patricia* patricia);
-// void pat_node_init(Patricia* patricia, Item key, Item key_a, int *h);
+void pat_print(Patricia patricia);
+int pat_word_count (Patricia patricia);
 int pat_search(Patricia patricia, Item key);
 Patricia pat_insert(Patricia* patricia, Item key);
 #endif
