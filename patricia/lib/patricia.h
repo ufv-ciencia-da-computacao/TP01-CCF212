@@ -1,3 +1,4 @@
+//Grupo Raiz
 #ifndef __PATRICIA_H__
 #define __PATRICIA_H__
 
@@ -35,6 +36,6 @@ int type_node(Patricia p);
 void pat_init(Patricia* patricia);
 void pat_print(Patricia patricia);
 int pat_word_count (Patricia patricia);
-int pat_search(Patricia patricia, Item key);
-Patricia pat_insert(Patricia* patricia, Item key);
+int pat_search(Patricia patricia, Item key, int* qtdComp);
+Patricia pat_insert(Patricia* patricia, Item key, int* qtdComp);
 #endif

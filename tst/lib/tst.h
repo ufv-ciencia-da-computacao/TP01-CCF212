@@ -1,3 +1,4 @@
+//Grupo Raiz
 #ifndef __TRIE_H__
 #define __TRIE_H__
 
@@ -16,8 +17,8 @@ struct node_t {
 };
 
 void tst_node_init(TST *root, char ch);
-void tst_insert(TST *root, char *str);
-int tst_search(TST *root, char *str);
+void tst_insert(TST *root, char *str, int* qtdComp);
+int tst_search(TST *root, char *str, int* qtdComp);
 void tst_print(TST root);
 int tst_word_count (TST root);
 #endif

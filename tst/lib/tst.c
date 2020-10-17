@@ -1,3 +1,4 @@
+//Grupo Raiz
 #include "tst.h"
 
 void tst_node_init(TST *root, char ch) {
@@ -10,35 +11,67 @@ void tst_node_init(TST *root, char ch) {
   (*root)->character = ch;
 }
 
-static void insert(TST *root, char* str, int pos, int len) {
-  if ((*root) == NULL) tst_node_init(root, str[pos]);
+static void insert(TST *root, char* str, int pos, int len, int* qtdComp) {
+  if ((*root) == NULL) {
+      (*qtdComp)++;
+      tst_node_init(root, str[pos]);
+    }
 
   if (pos == len) {
+    (*qtdComp)++;
     (*root)->end_word = 1;
     return;
   }
 
-  if (str[pos] == (*root)->character) insert(&(*root)->middle, str, pos+1, len);
-  else if (str[pos] > (*root)->character) insert(&(*root)->right, str, pos, len);
-  else insert(&(*root)->left, str, pos, len);
+  if (str[pos] == (*root)->character) {
+    (*qtdComp)++;
+    insert(&(*root)->middle, str, pos+1, len, qtdComp);
+  }
+  else if (str[pos] > (*root)->character) {
+    (*qtdComp) += 2;
+    insert(&(*root)->right, str, pos, len, qtdComp);
+  }
+  else {
+    (*qtdComp) += 2;
+    insert(&(*root)->left, str, pos, len, qtdComp);
+  }
   
 }
 
-void tst_insert(TST *root, char *str) {
-  insert(root, str, 0, strlen(str));
+//Operação de inserção de uma palavra na árvore TST
+void tst_insert(TST *root, char *str, int* qtdComp) {
+  *qtdComp = 0;
+  insert(root, str, 0, strlen(str), qtdComp);
 }
 
-static int search(TST *root, char *str, int pos, int len) {
-  if ((*root) == NULL) return 0;
-  if (pos == len && (*root)->end_word == 1) return 1;
+static int search(TST *root, char *str, int pos, int len, int* qtdComp) {
+  if ((*root) == NULL) {
+    (*qtdComp)++;
+    return 0;
+  }
+  if (pos == len && (*root)->end_word == 1) {
+    (*qtdComp) += 2;
+    return 1;
+  }
 
-  if (str[pos] == (*root)->character) return search(&(*root)->middle, str, pos+1, len);
-  else if (str[pos] > (*root)->character) return search(&(*root)->right, str, pos, len);
-  else return search(&(*root)->left, str, pos, len);
+  if (str[pos] == (*root)->character) {
+    (*qtdComp)++;
+    return search(&(*root)->middle, str, pos+1, len, qtdComp);
+  }
+  else if (str[pos] > (*root)->character) {
+    (*qtdComp) += 2;
+    return search(&(*root)->right, str, pos, len, qtdComp);
+  }
+  else {
+    (*qtdComp) += 2;
+    return search(&(*root)->left, str, pos, len, qtdComp);
+  }
 }
 
-int tst_search(TST *root, char *str) {
-  return search(root, str, 0, strlen(str));
+//Operação de pesquisa de uma palavra na árvore TST
+int tst_search(TST *root, char *str, int* qtdComp) {
+  *qtdComp = 0;
+  return search(root, str, 0, strlen(str), qtdComp);
 }
 
 void print_tst(TST root, char* word, int pos) {
@@ -58,6 +91,7 @@ void print_tst(TST root, char* word, int pos) {
   print_tst(root->right, word, pos); 
 }
 
+//Operação para imprimir em ordem em uma árvore TST
 void tst_print(TST root) {
   char word[256];
   strcpy(word, "");
@@ -78,6 +112,7 @@ static int word_countT(TST root, int count) {
   
 }
 
+//Operação para contar o número de palavras em uma árvore TST
 int tst_word_count (TST root) {
   return word_countT(root, 0);
 }

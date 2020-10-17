@@ -1,16 +1,19 @@
+//Grupo Raiz
 #include <stdio.h>
 #include <stdlib.h>
-#include "./patricia/lib/patricia.c"
-#include "./tst/lib/tst.c"
+//#include "./patricia/lib/patricia.c"
+//#include "./tst/lib/tst.c"
+#include "leitura.c"
 
 int main () {
-    int x = -1, y = -1;
+    int x = -1, y = -1, qtdComp = 0;
     char palavra[256];
     Patricia patricia = NULL;
     TST tst = NULL;
 
     while(y != 0 && x != 0) {
         x = -1;
+        qtdComp = 0;
         printf("\n");
         printf("          --- MENU ---        \n");
         printf("Escolha uma das opcoes abaixo:\n");
@@ -43,14 +46,19 @@ int main () {
             case 1:
                 switch  (x) {
                     case 1:
-                        printf("Qual palavra deseja inserir?\n");
-                        scanf("%s", palavra);
-                        tst_insert(&tst, palavra);
+                        //printf("Qual palavra deseja inserir?\n");
+                        //scanf("%s", palavra);
+                        //tst_insert(&tst, palavra);
+                        qtdComp = 0;
+                        tst_ler_arquivo(&tst, &qtdComp);
+                        printf("Quantidade de comparacoes para insercao: %d", qtdComp);
                         break;
                     case 2:
+                        qtdComp = 0;
                         printf("Qual palavra deseja pesquisar?\n");
                         scanf("%s", palavra);
-                        printf(tst_search(&tst, palavra) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
+                        printf(tst_search(&tst, palavra, &qtdComp) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
+                        printf("Quantidade de comparacoes pesquisa: %d\n", qtdComp);
                         break;
                     case 3:
                         printf("Exibindo em Ordem Alfabetica:\n");
@@ -65,14 +73,19 @@ int main () {
             case 2:
                 switch  (x) {
                     case 1:
-                        printf("Qual palavra deseja inserir?\n");
-                        scanf("%s", palavra);
-                        pat_insert(&patricia, palavra);
+                        //printf("Qual palavra deseja inserir?\n");
+                        //scanf("%s", palavra);
+                        //patricia = pat_insert(&patricia, palavra);
+                        qtdComp = 0;
+                        patricia_ler_arquivo(&patricia, &qtdComp);
+                        printf("Quantidade de comparacoes para insercao: %d", qtdComp);
                         break;
                     case 2:
+                        qtdComp = 0;
                         printf("Qual palavra deseja pesquisar?\n");
                         scanf("%s", palavra);
-                        printf(pat_search(patricia, palavra) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
+                        printf(pat_search(patricia, palavra, &qtdComp) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
+                        printf("Quantidade de comparacoes pesquisa: %d\n", qtdComp);
                         break;
                     case 3:
                         printf("Exibindo em Ordem Alfabetica:\n");
@@ -87,7 +100,6 @@ int main () {
             default:
                 break;
             }
-        
         }
     }
     return 0;
