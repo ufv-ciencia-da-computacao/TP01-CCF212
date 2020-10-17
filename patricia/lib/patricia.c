@@ -81,16 +81,16 @@ void pat_print(Patricia patricia) {
   if (type_node(patricia) == internal) pat_print(patricia->node.node_internal.right);
 }
 
-static int word_count(Patricia patricia, int count) {
+static int word_countP(Patricia patricia, int count) {
   if (patricia == NULL) return count;
   
-  if (type_node(patricia) == internal) count = word_count(patricia->node.node_internal.left, count);
+  if (type_node(patricia) == internal) count = word_countP(patricia->node.node_internal.left, count);
   if (type_node(patricia) == external) return count+1;
-  if (type_node(patricia) == internal) count = word_count(patricia->node.node_internal.right, count);
+  if (type_node(patricia) == internal) count = word_countP(patricia->node.node_internal.right, count);
 }
 
 int pat_word_count (Patricia patricia) {
-  return word_count(patricia, 0);
+  return word_countP(patricia, 0);
 }
 
 Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple) {

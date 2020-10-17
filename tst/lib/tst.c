@@ -30,7 +30,7 @@ void tst_insert(TST *root, char *str) {
 
 static int search(TST *root, char *str, int pos, int len) {
   if ((*root) == NULL) return 0;
-  if (pos == len) return 1;
+  if (pos == len && (*root)->end_word == 1) return 1;
 
   if (str[pos] == (*root)->character) return search(&(*root)->middle, str, pos+1, len);
   else if (str[pos] > (*root)->character) return search(&(*root)->right, str, pos, len);
@@ -65,19 +65,19 @@ void tst_print(TST root) {
   print_tst(root, word, 0);
 }
 
-static int word_count(TST root, int count) {
+static int word_countT(TST root, int count) {
   if (root == NULL) return count;
 
-  count = word_count(root->left, count);
+  count = word_countT(root->left, count);
  
   if(root->end_word) count++;
  
-  count = word_count(root->middle, count);
+  count = word_countT(root->middle, count);
 
-  count = word_count(root->right, count); 
+  count = word_countT(root->right, count); 
   
 }
 
 int tst_word_count (TST root) {
-  return word_count(root, 0);
+  return word_countT(root, 0);
 }
