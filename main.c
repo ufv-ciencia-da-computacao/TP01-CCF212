@@ -1,6 +1,7 @@
 //Grupo Raiz
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 //#include "./patricia/lib/patricia.c"
 //#include "./tst/lib/tst.c"
 #include "leitura.c"
@@ -10,6 +11,8 @@ int main () {
     char palavra[256];
     Patricia patricia = NULL;
     TST tst = NULL;
+    clock_t t;
+    double tempoTotal;
 
     while(y != 0 && x != 0) {
         x = -1;
@@ -50,15 +53,23 @@ int main () {
                         //scanf("%s", palavra);
                         //tst_insert(&tst, palavra);
                         qtdComp = 0;
+                        t = clock();
                         tst_ler_arquivo(&tst, &qtdComp);
-                        printf("Quantidade de comparacoes para insercao: %d", qtdComp);
+                        t = clock() - t;
+                        tempoTotal = ((double)t)/CLOCKS_PER_SEC;
+                        printf("Quantidade de comparacoes para insercao: %d\n", qtdComp);
+                        printf("Tempo gasto para insercao: %f segundos\n", tempoTotal);
                         break;
                     case 2:
                         qtdComp = 0;
                         printf("Qual palavra deseja pesquisar?\n");
                         scanf("%s", palavra);
+                        t = clock();
                         printf(tst_search(&tst, palavra, &qtdComp) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
-                        printf("Quantidade de comparacoes pesquisa: %d\n", qtdComp);
+                        t = clock() - t;
+                        tempoTotal = ((double)t)/CLOCKS_PER_SEC;
+                        printf("Quantidade de comparacoes para pesquisa: %d\n", qtdComp);
+                        printf("Tempo gasto para pesquisa: %f segundos\n", tempoTotal);
                         break;
                     case 3:
                         printf("Exibindo em Ordem Alfabetica:\n");
@@ -77,15 +88,23 @@ int main () {
                         //scanf("%s", palavra);
                         //patricia = pat_insert(&patricia, palavra);
                         qtdComp = 0;
+                        t = clock();
                         patricia_ler_arquivo(&patricia, &qtdComp);
-                        printf("Quantidade de comparacoes para insercao: %d", qtdComp);
+                        t = clock() - t;
+                        tempoTotal = ((double)t)/CLOCKS_PER_SEC;
+                        printf("Quantidade de comparacoes para insercao: %d\n", qtdComp);
+                        printf("Tempo gasto para insercao: %f segundos\n", tempoTotal);
                         break;
                     case 2:
                         qtdComp = 0;
                         printf("Qual palavra deseja pesquisar?\n");
                         scanf("%s", palavra);
+                        t = clock();
                         printf(pat_search(patricia, palavra, &qtdComp) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
-                        printf("Quantidade de comparacoes pesquisa: %d\n", qtdComp);
+                        t = clock() - t;
+                        tempoTotal = ((double)t)/CLOCKS_PER_SEC;
+                        printf("Quantidade de comparacoes para pesquisa: %d\n", qtdComp);
+                        printf("Tempo gasto para pesquisa: %f segundos\n", tempoTotal);
                         break;
                     case 3:
                         printf("Exibindo em Ordem Alfabetica:\n");
