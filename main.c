@@ -59,6 +59,7 @@ int main () {
                         tempoTotal = ((double)t)/CLOCKS_PER_SEC;
                 
                         benchmark_print_qtd_comp(benchmark);
+                        tst_mem_size(tst, &benchmark);
                         benchmark_print_mem_insertion(benchmark);
                         printf("Tempo gasto para insercao: %f segundos\n", tempoTotal);
                         break;
@@ -99,6 +100,7 @@ int main () {
                         tempoTotal = ((double)t)/CLOCKS_PER_SEC;
                         
                         benchmark_print_qtd_comp(benchmark);
+                        pat_mem_size(patricia, &benchmark);
                         benchmark_print_mem_insertion(benchmark);
                         printf("Tempo gasto para insercao: %f segundos\n", tempoTotal);
                         break;
