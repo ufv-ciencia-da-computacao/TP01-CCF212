@@ -1,10 +1,11 @@
 //Grupo Raiz
-#ifndef __TRIE_H__
-#define __TRIE_H__
+#ifndef __TST_H__
+#define __TST_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../../benchmark/lib/benchmark.h"
 
 typedef struct node_t *TST;
 
@@ -17,8 +18,8 @@ struct node_t {
 };
 
 void tst_node_init(TST *root, char ch);
-void tst_insert(TST *root, char *str, int* qtdComp);
-int tst_search(TST *root, char *str, int* qtdComp);
+void tst_insert(TST *root, char *str, benchmark_t* b);
+int tst_search(TST *root, char *str, benchmark_t* b);
 void tst_print(TST root);
 int tst_word_count (TST root);
 #endif

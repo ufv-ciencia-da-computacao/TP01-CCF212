@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "../../benchmark/lib/benchmark.h"
 
 #define D 8 // Depends on type of Item
 #define CHARACTERS 256
@@ -36,6 +37,7 @@ int type_node(Patricia p);
 void pat_init(Patricia* patricia);
 void pat_print(Patricia patricia);
 int pat_word_count (Patricia patricia);
-int pat_search(Patricia patricia, Item key, int* qtdComp);
-Patricia pat_insert(Patricia* patricia, Item key, int* qtdComp);
+int pat_search(Patricia patricia, Item key, benchmark_t* b);
+Patricia pat_insert(Patricia* patricia, Item key, benchmark_t* b);
+void pat_mem_size(Patricia pat, benchmark_t *b);
 #endif

@@ -1,9 +1,13 @@
 //Grupo Raiz
-#include<stdio.h>
-#include "./patricia/lib/patricia.c"
-#include "./tst/lib/tst.c"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "./benchmark/lib/benchmark.h"
+#include "./patricia/lib/patricia.h"
+#include "./tst/lib/tst.h"
 
-void tst_ler_arquivo (TST* tst, int* qtdComp) {
+void tst_ler_arquivo (TST* tst, benchmark_t *b) {
     FILE* arq;
     int qtdPalavra = 0;
     char palavra[256], nome[50];
@@ -17,20 +21,19 @@ void tst_ler_arquivo (TST* tst, int* qtdComp) {
         char palavra[256];
 
         while(!feof(arq)) {
-            qtdPalavra = 0;
             fscanf(arq, "%s", palavra);
-            strcpy(palavra, strlwr(palavra));
-            tst_insert(tst, palavra, &qtdPalavra);
-            (*qtdComp) += qtdPalavra;
+            for(int i = 0; palavra[i]; i++){
+                palavra[i] = tolower(palavra[i]);
+            }
+            tst_insert(tst, palavra, b);
         }
 
         fclose(arq);
     }
 }
 
-void patricia_ler_arquivo (Patricia* patricia, int* qtdComp) {
+void patricia_ler_arquivo (Patricia* patricia, benchmark_t* b) {
     FILE* arq;
-    int qtdPalavra = 0;
     char palavra[256], nome[50];
     printf("Qual o nome do arquivo? (com a extensao)\n");
     scanf("%s", nome);
@@ -42,11 +45,12 @@ void patricia_ler_arquivo (Patricia* patricia, int* qtdComp) {
         char palavra[256];
 
         while(!feof(arq)) {
-            qtdPalavra = 0;
             fscanf(arq, "%s", palavra);
-            strcpy(palavra, strlwr(palavra));
-            (*patricia) = pat_insert(patricia, palavra, &qtdPalavra);
-            (*qtdComp) += qtdPalavra;
+
+            for(int i = 0; palavra[i]; i++){
+                palavra[i] = tolower(palavra[i]);
+            }
+            (*patricia) = pat_insert(patricia, palavra, b);
         }
 
         fclose(arq);

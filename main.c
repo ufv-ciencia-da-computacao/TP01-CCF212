@@ -2,21 +2,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-//#include "./patricia/lib/patricia.c"
-//#include "./tst/lib/tst.c"
+#include "./patricia/lib/patricia.h"
+#include "./tst/lib/tst.h"
 #include "leitura.c"
 
 int main () {
-    int x = -1, y = -1, qtdComp = 0;
+    int x = -1, y = -1;
     char palavra[256];
     Patricia patricia = NULL;
     TST tst = NULL;
     clock_t t;
     double tempoTotal;
 
+    benchmark_t benchmark;
+    benchmark_init(&benchmark);
+
     while(y != 0 && x != 0) {
+        benchmark_init(&benchmark);
         x = -1;
-        qtdComp = 0;
         printf("\n");
         printf("          --- MENU ---        \n");
         printf("Escolha uma das opcoes abaixo:\n");
@@ -49,26 +52,28 @@ int main () {
             case 1:
                 switch  (x) {
                     case 1:
-                        //printf("Qual palavra deseja inserir?\n");
-                        //scanf("%s", palavra);
-                        //tst_insert(&tst, palavra);
-                        qtdComp = 0;
+                        benchmark_init(&benchmark);
                         t = clock();
-                        tst_ler_arquivo(&tst, &qtdComp);
+                        tst_ler_arquivo(&tst, &benchmark);
                         t = clock() - t;
                         tempoTotal = ((double)t)/CLOCKS_PER_SEC;
-                        printf("Quantidade de comparacoes para insercao: %d\n", qtdComp);
+                
+                        benchmark_print_qtd_comp(benchmark);
+                        benchmark_print_mem_insertion(benchmark);
                         printf("Tempo gasto para insercao: %f segundos\n", tempoTotal);
                         break;
                     case 2:
-                        qtdComp = 0;
+                        benchmark_reset_qtd_comp(&benchmark);
                         printf("Qual palavra deseja pesquisar?\n");
                         scanf("%s", palavra);
+
                         t = clock();
-                        printf(tst_search(&tst, palavra, &qtdComp) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
+                        printf(tst_search(&tst, palavra, &benchmark) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
                         t = clock() - t;
                         tempoTotal = ((double)t)/CLOCKS_PER_SEC;
-                        printf("Quantidade de comparacoes para pesquisa: %d\n", qtdComp);
+                        
+                        benchmark_print_qtd_comp(benchmark);
+
                         printf("Tempo gasto para pesquisa: %f segundos\n", tempoTotal);
                         break;
                     case 3:
@@ -87,23 +92,27 @@ int main () {
                         //printf("Qual palavra deseja inserir?\n");
                         //scanf("%s", palavra);
                         //patricia = pat_insert(&patricia, palavra);
-                        qtdComp = 0;
+                        benchmark_init(&benchmark);
                         t = clock();
-                        patricia_ler_arquivo(&patricia, &qtdComp);
+                        patricia_ler_arquivo(&patricia, &benchmark);
                         t = clock() - t;
                         tempoTotal = ((double)t)/CLOCKS_PER_SEC;
-                        printf("Quantidade de comparacoes para insercao: %d\n", qtdComp);
+                        
+                        benchmark_print_qtd_comp(benchmark);
+                        benchmark_print_mem_insertion(benchmark);
                         printf("Tempo gasto para insercao: %f segundos\n", tempoTotal);
                         break;
                     case 2:
-                        qtdComp = 0;
+                        benchmark_reset_qtd_comp(&benchmark);
                         printf("Qual palavra deseja pesquisar?\n");
                         scanf("%s", palavra);
                         t = clock();
-                        printf(pat_search(patricia, palavra, &qtdComp) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
+                        printf(pat_search(patricia, palavra, &benchmark) ? "Palavra presente na arvore\n":"Palavra nao esta na arvore\n");
                         t = clock() - t;
                         tempoTotal = ((double)t)/CLOCKS_PER_SEC;
-                        printf("Quantidade de comparacoes para pesquisa: %d\n", qtdComp);
+                       
+                        benchmark_print_qtd_comp(benchmark);
+
                         printf("Tempo gasto para pesquisa: %f segundos\n", tempoTotal);
                         break;
                     case 3:
