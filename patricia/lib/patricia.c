@@ -30,21 +30,19 @@ tuple_t get_char(Item a, Item b, int* qtdComp) {
       tuple.character = b[i];
       tuple.index = i;
       return tuple;
-    }
-    else if (a[i] != b[i]) {
+    } else if (a[i] != b[i]) {
       (*qtdComp)+=3;
       if (a[i] <= b[i]) {
         (*qtdComp)++;
         tuple.character = a[i];
-      }
-      else {
+      } else {
         (*qtdComp)++;
         tuple.character = b[i];
-      }
-      
+      }      
       tuple.index = i;
       return tuple;
     }
+    (*qtdComp)+=3;
   }
 }
 
@@ -77,14 +75,10 @@ int pat_search(Patricia patricia, Item key, int* qtdComp) {
     return strcmp(key, patricia->node.key) == 0 ? 1:0;
   }
 
-  //printf("%d", patricia->node.node_internal.index);
-  //printf("%c\n", patricia->node.node_internal.character);
-
   if (key[patricia->node.node_internal.index] <= patricia->node.node_internal.character)  {
     (*qtdComp)++;
     return pat_search(patricia->node.node_internal.left, key, qtdComp);
-  }
-  else {
+  } else {
     (*qtdComp)++;
     return pat_search(patricia->node.node_internal.right, key, qtdComp);
   }
@@ -139,10 +133,10 @@ Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple, i
 
 Patricia pat_insert(Patricia* patricia, Item key, int* qtdComp) {
   *qtdComp = 0;
+  (*qtdComp)++;
   if((*patricia) == NULL) {
     pat_init_external(patricia, key);
     return (*patricia);
-    (*qtdComp)++;
   } 
   
   Patricia aux = *patricia;
@@ -157,9 +151,9 @@ Patricia pat_insert(Patricia* patricia, Item key, int* qtdComp) {
       aux = aux->node.node_internal.left;
     }
   }
+  (*qtdComp)++;
 
   tuple_t tuple = get_char(key, aux->node.key, qtdComp);
-
 
   return pat_insert_node_internal(patricia, key, tuple, qtdComp);  
 }

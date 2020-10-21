@@ -12,13 +12,13 @@ void tst_node_init(TST *root, char ch) {
 }
 
 static void insert(TST *root, char* str, int pos, int len, int* qtdComp) {
+  (*qtdComp)++;
   if ((*root) == NULL) {
-      (*qtdComp)++;
       tst_node_init(root, str[pos]);
     }
 
+  (*qtdComp)++;
   if (pos == len) {
-    (*qtdComp)++;
     (*root)->end_word = 1;
     return;
   }
@@ -26,12 +26,10 @@ static void insert(TST *root, char* str, int pos, int len, int* qtdComp) {
   if (str[pos] == (*root)->character) {
     (*qtdComp)++;
     insert(&(*root)->middle, str, pos+1, len, qtdComp);
-  }
-  else if (str[pos] > (*root)->character) {
+  } else if (str[pos] > (*root)->character) {
     (*qtdComp) += 2;
     insert(&(*root)->right, str, pos, len, qtdComp);
-  }
-  else {
+  } else {
     (*qtdComp) += 2;
     insert(&(*root)->left, str, pos, len, qtdComp);
   }
@@ -45,24 +43,22 @@ void tst_insert(TST *root, char *str, int* qtdComp) {
 }
 
 static int search(TST *root, char *str, int pos, int len, int* qtdComp) {
+  (*qtdComp)++;
   if ((*root) == NULL) {
-    (*qtdComp)++;
     return 0;
   }
+  (*qtdComp) += 2;
   if (pos == len && (*root)->end_word == 1) {
-    (*qtdComp) += 2;
     return 1;
   }
 
   if (str[pos] == (*root)->character) {
     (*qtdComp)++;
     return search(&(*root)->middle, str, pos+1, len, qtdComp);
-  }
-  else if (str[pos] > (*root)->character) {
+  } else if (str[pos] > (*root)->character) {
     (*qtdComp) += 2;
     return search(&(*root)->right, str, pos, len, qtdComp);
-  }
-  else {
+  } else {
     (*qtdComp) += 2;
     return search(&(*root)->left, str, pos, len, qtdComp);
   }
