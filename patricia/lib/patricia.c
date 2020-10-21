@@ -1,5 +1,6 @@
 //Grupo Raiz
 #include "patricia.h"
+#include "../../benchmark/lib/benchmark.h"
 
 typedef struct {
   int index;
@@ -10,7 +11,7 @@ int min(int a, int b) {
   return (a < b ? a : b);
 }
 
-tuple_t get_char(Item a, Item b, int* qtdComp) {
+tuple_t get_char(Item a, Item b, benchmark_t* bench) {
   size_t item_a = strlen(a);
   size_t item_b = strlen(b);
 
@@ -19,30 +20,30 @@ tuple_t get_char(Item a, Item b, int* qtdComp) {
   int m = min(item_a, item_b);
 
   for(int i=0; i<m; i++) {
-    (*qtdComp)++;
+    benchmark_sum_qtd_comp(bench, 1);
     if (a[i] == '\0') {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(bench, 1);
       tuple.character = a[i];
       tuple.index = i;
       return tuple;
     } else if(b[i] == '\0') {
-      (*qtdComp)+=2;
+      benchmark_sum_qtd_comp(bench, 1);
       tuple.character = b[i];
       tuple.index = i;
       return tuple;
     } else if (a[i] != b[i]) {
-      (*qtdComp)+=3;
+      benchmark_sum_qtd_comp(bench, 3);
       if (a[i] <= b[i]) {
-        (*qtdComp)++;
+        benchmark_sum_qtd_comp(bench, 1);
         tuple.character = a[i];
       } else {
-        (*qtdComp)++;
+        benchmark_sum_qtd_comp(bench, 1);
         tuple.character = b[i];
       }      
       tuple.index = i;
       return tuple;
     }
-    (*qtdComp)+=3;
+    benchmark_sum_qtd_comp(bench, 3);
   }
 }
 
@@ -68,19 +69,19 @@ void pat_init_external(Patricia *patricia, Item key) {
   strcpy((*patricia)->node.key, key);
 }
 
-int pat_search(Patricia patricia, Item key, int* qtdComp) {
-  (*qtdComp)++;
+int pat_search(Patricia patricia, Item key, benchmark_t* b) {
+  benchmark_sum_qtd_comp(b, 1);
   if (type_node(patricia) == external) {
-    (*qtdComp)++;
+    benchmark_sum_qtd_comp(b, 1);
     return strcmp(key, patricia->node.key) == 0 ? 1:0;
   }
 
   if (key[patricia->node.node_internal.index] <= patricia->node.node_internal.character)  {
-    (*qtdComp)++;
-    return pat_search(patricia->node.node_internal.left, key, qtdComp);
+    benchmark_sum_qtd_comp(b, 1);
+    return pat_search(patricia->node.node_internal.left, key, b);
   } else {
-    (*qtdComp)++;
-    return pat_search(patricia->node.node_internal.right, key, qtdComp);
+    benchmark_sum_qtd_comp(b, 1);
+    return pat_search(patricia->node.node_internal.right, key, b);
   }
 }
 
@@ -92,7 +93,7 @@ void pat_print(Patricia patricia) {
   if (type_node(patricia) == internal) pat_print(patricia->node.node_internal.right);
 }
 
-static int word_countP(Patricia patricia, int count) {
+int word_countP(Patricia patricia, int count) {
   if (patricia == NULL) return count;
   
   if (type_node(patricia) == internal) count = word_countP(patricia->node.node_internal.left, count);
@@ -100,40 +101,40 @@ static int word_countP(Patricia patricia, int count) {
   if (type_node(patricia) == internal) count = word_countP(patricia->node.node_internal.right, count);
 }
 
-int pat_word_count (Patricia patricia) {
+int pat_word_count(Patricia patricia) {
   return word_countP(patricia, 0);
 }
 
-Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple, int* qtdComp) {
+Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple, benchmark_t* b) {
   Patricia new;
   if (type_node(*patricia) == external || tuple.index < (*patricia)->node.node_internal.index) {
-    (*qtdComp) += 2;
+    benchmark_sum_qtd_comp(b, 2);
     pat_init_external(&new, key);
     if (key[tuple.index] > tuple.character) {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(b, 1);
       return pat_init_internal(patricia, &new, tuple);
     } else {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(b, 1);
       return pat_init_internal(&new, patricia, tuple);
     }
   } else {
-    (*qtdComp) += 2;
+    benchmark_sum_qtd_comp(b, 2);
     if (key[(*patricia)->node.node_internal.index] >  (*patricia)->node.node_internal.character) {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(b, 1);
       (*patricia)->node.node_internal.right = 
-              pat_insert_node_internal(&(*patricia)->node.node_internal.right, key, tuple, qtdComp);
+              pat_insert_node_internal(&(*patricia)->node.node_internal.right, key, tuple, b);
     } else {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(b, 1);
       (*patricia)->node.node_internal.left = 
-              pat_insert_node_internal(&(*patricia)->node.node_internal.left, key, tuple, qtdComp);
+              pat_insert_node_internal(&(*patricia)->node.node_internal.left, key, tuple, b);
     }
     return (*patricia);
   }
 }
 
-Patricia pat_insert(Patricia* patricia, Item key, int* qtdComp) {
-  *qtdComp = 0;
-  (*qtdComp)++;
+Patricia pat_insert(Patricia* patricia, Item key, benchmark_t* b) {
+
+  benchmark_sum_qtd_comp(b, 1);
   if((*patricia) == NULL) {
     pat_init_external(patricia, key);
     return (*patricia);
@@ -142,18 +143,27 @@ Patricia pat_insert(Patricia* patricia, Item key, int* qtdComp) {
   Patricia aux = *patricia;
 
   while (type_node(aux) != external) {
-    (*qtdComp)++;
+    benchmark_sum_qtd_comp(b, 1);
     if (key[aux->node.node_internal.index] > aux->node.node_internal.character) {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(b, 1);
       aux = aux->node.node_internal.right;
     } else {
-      (*qtdComp)++;
+      benchmark_sum_qtd_comp(b, 1);
       aux = aux->node.node_internal.left;
     }
   }
-  (*qtdComp)++;
+  benchmark_sum_qtd_comp(b, 1);
 
-  tuple_t tuple = get_char(key, aux->node.key, qtdComp);
+  tuple_t tuple = get_char(key, aux->node.key, b);
 
-  return pat_insert_node_internal(patricia, key, tuple, qtdComp);  
+  return pat_insert_node_internal(patricia, key, tuple, b);  
+}
+
+int pat_count_nodes(Patricia pat) {
+  if (pat == NULL || type_node(pat) == external) return 0;
+  return 1 + pat_count_nodes(pat->node.node_internal.left) + pat_count_nodes(pat->node.node_internal.left);
+}
+
+void pat_mem_size(Patricia pat, benchmark_t *b) {
+  benchmark_sum_mem_insertion(b, sizeof(pat_node)*pat_count_nodes(pat));
 }

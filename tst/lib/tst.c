@@ -1,5 +1,6 @@
 //Grupo Raiz
 #include "tst.h"
+#include "../../benchmark/lib/benchmark.h"
 
 void tst_node_init(TST *root, char ch) {
   (*root) = (TST) malloc(sizeof(struct node_t));
@@ -11,63 +12,61 @@ void tst_node_init(TST *root, char ch) {
   (*root)->character = ch;
 }
 
-static void insert(TST *root, char* str, int pos, int len, int* qtdComp) {
-  (*qtdComp)++;
+static void insert(TST *root, char* str, int pos, int len, benchmark_t *b) {
+  benchmark_sum_qtd_comp(b, 1);
   if ((*root) == NULL) {
       tst_node_init(root, str[pos]);
     }
 
-  (*qtdComp)++;
+  benchmark_sum_qtd_comp(b, 1);
   if (pos == len) {
     (*root)->end_word = 1;
     return;
   }
 
   if (str[pos] == (*root)->character) {
-    (*qtdComp)++;
-    insert(&(*root)->middle, str, pos+1, len, qtdComp);
+    benchmark_sum_qtd_comp(b, 1);
+    insert(&(*root)->middle, str, pos+1, len, b);
   } else if (str[pos] > (*root)->character) {
-    (*qtdComp) += 2;
-    insert(&(*root)->right, str, pos, len, qtdComp);
+    benchmark_sum_qtd_comp(b, 2);
+    insert(&(*root)->right, str, pos, len, b);
   } else {
-    (*qtdComp) += 2;
-    insert(&(*root)->left, str, pos, len, qtdComp);
+    benchmark_sum_qtd_comp(b, 2);
+    insert(&(*root)->left, str, pos, len, b);
   }
   
 }
 
 //Operação de inserção de uma palavra na árvore TST
-void tst_insert(TST *root, char *str, int* qtdComp) {
-  *qtdComp = 0;
-  insert(root, str, 0, strlen(str), qtdComp);
+void tst_insert(TST *root, char *str, benchmark_t* b) {
+  insert(root, str, 0, strlen(str), b);
 }
 
-static int search(TST *root, char *str, int pos, int len, int* qtdComp) {
-  (*qtdComp)++;
+static int search(TST *root, char *str, int pos, int len, benchmark_t* b) {
+  benchmark_sum_qtd_comp(b, 1);
   if ((*root) == NULL) {
     return 0;
   }
-  (*qtdComp) += 2;
+  benchmark_sum_qtd_comp(b, 2);
   if (pos == len && (*root)->end_word == 1) {
     return 1;
   }
 
   if (str[pos] == (*root)->character) {
-    (*qtdComp)++;
-    return search(&(*root)->middle, str, pos+1, len, qtdComp);
+    benchmark_sum_qtd_comp(b, 1);
+    return search(&(*root)->middle, str, pos+1, len, b);
   } else if (str[pos] > (*root)->character) {
-    (*qtdComp) += 2;
-    return search(&(*root)->right, str, pos, len, qtdComp);
+    benchmark_sum_qtd_comp(b, 2);
+    return search(&(*root)->right, str, pos, len, b);
   } else {
-    (*qtdComp) += 2;
-    return search(&(*root)->left, str, pos, len, qtdComp);
+    benchmark_sum_qtd_comp(b, 2);
+    return search(&(*root)->left, str, pos, len, b);
   }
 }
 
 //Operação de pesquisa de uma palavra na árvore TST
-int tst_search(TST *root, char *str, int* qtdComp) {
-  *qtdComp = 0;
-  return search(root, str, 0, strlen(str), qtdComp);
+int tst_search(TST *root, char *str, benchmark_t* b) {
+  return search(root, str, 0, strlen(str), b);
 }
 
 void print_tst(TST root, char* word, int pos) {
@@ -111,4 +110,16 @@ static int word_countT(TST root, int count) {
 //Operação para contar o número de palavras em uma árvore TST
 int tst_word_count (TST root) {
   return word_countT(root, 0);
+}
+
+static int tst_count_nodes(TST root) {
+  if (root == NULL) return 0;
+
+  return 1 + tst_count_nodes(root->left) + 
+          tst_count_nodes(root->middle) + 
+          tst_count_nodes(root->right); 
+}
+
+void tst_mem_size(TST tst, benchmark_t *b) {
+  b->mem_insertion = sizeof(struct node_t)*tst_count_nodes(tst);
 }
