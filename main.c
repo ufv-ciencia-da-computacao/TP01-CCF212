@@ -36,7 +36,7 @@ int main () {
             if(y==1) printf("       --- MENU TST ---     \n");
             else     printf("    --- MENU Patricia ---   \n");
             printf("Escolha uma das opcoes abaixo:       \n");
-            printf("1. Inserir palavra                   \n");
+            printf("1. Ler Arquivo                       \n");
             printf("2. Pesquisar palavra                 \n");
             printf("3. Exibir em Ordem Alfabetica        \n");
             printf("4. Contar Palavras                   \n");

@@ -23,9 +23,9 @@ void benchmark_sum_mem_insertion(benchmark_t *b, size_t mem_insert) {
 }
 
 void benchmark_print_mem_insertion(benchmark_t b) {
-    printf("Quantidade de memória alocada: %ld bytes\n", b.mem_insertion);
+    printf("Quantidade de memoria alocada: %ld bytes\n", b.mem_insertion);
 }
 
 void benchmark_print_qtd_comp(benchmark_t b) {
-    printf("Quantidade de comparacoes para insercao: %d\n", b.qtd_comp);
+    printf("\nQuantidade de comparacoes para insercao: %d\n", b.qtd_comp);
 }
