@@ -11,7 +11,7 @@ int min(int a, int b) {
   return (a < b ? a : b);
 }
 
-tuple_t get_char(Item a, Item b, benchmark_t* bench) {
+tuple_t get_char(String a, String b, benchmark_t* bench) {
   size_t item_a = strlen(a);
   size_t item_b = strlen(b);
 
@@ -63,13 +63,14 @@ Patricia pat_init_internal(Patricia* left, Patricia *right, tuple_t tuple) {
   return patricia;
 }
 
-void pat_init_external(Patricia *patricia, Item key) {
+void pat_init_external(Patricia *patricia, String key) {
   (*patricia) = (Patricia) malloc(sizeof(pat_node));
   (*patricia)->type = external;
+  (*patricia)->node.key = (String) malloc((strlen(key)+1)*sizeof(char));
   strcpy((*patricia)->node.key, key);
 }
 
-int pat_search(Patricia patricia, Item key, benchmark_t* b) {
+int pat_search(Patricia patricia, String key, benchmark_t* b) {
   benchmark_sum_qtd_comp(b, 1);
   if (type_node(patricia) == external) {
     benchmark_sum_qtd_comp(b, 1);
@@ -105,7 +106,7 @@ int pat_word_count(Patricia patricia) {
   return word_countP(patricia, 0);
 }
 
-Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple, benchmark_t* b) {
+Patricia pat_insert_node_internal(Patricia* patricia, String key, tuple_t tuple, benchmark_t* b) {
   Patricia new;
   if (type_node(*patricia) == external || tuple.index < (*patricia)->node.node_internal.index) {
     benchmark_sum_qtd_comp(b, 2);
@@ -132,7 +133,7 @@ Patricia pat_insert_node_internal(Patricia* patricia, Item key, tuple_t tuple, b
   }
 }
 
-Patricia pat_insert(Patricia* patricia, Item key, benchmark_t* b) {
+Patricia pat_insert(Patricia* patricia, String key, benchmark_t* b) {
 
   benchmark_sum_qtd_comp(b, 1);
   if((*patricia) == NULL) {
@@ -159,20 +160,28 @@ Patricia pat_insert(Patricia* patricia, Item key, benchmark_t* b) {
   return pat_insert_node_internal(patricia, key, tuple, b);  
 }
 
-int pat_count_nodes(Patricia pat) {
-  if (pat == NULL) return 0;
-  if (type_node(pat) == external) return 1;
-  return 1 + pat_count_nodes(pat->node.node_internal.left) + pat_count_nodes(pat->node.node_internal.right);
+void pat_mem_size(Patricia pat, benchmark_t *b) {
+  if (pat == NULL) return;
+  
+  if (type_node(pat) == external) {
+    benchmark_sum_mem_insertion(b, strlen(pat->node.key)*sizeof(char) + sizeof(pat_node));
+    return;
+  }
+
+  benchmark_sum_mem_insertion(b, sizeof(pat_node));
+  pat_mem_size(pat->node.node_internal.left, b);
+  pat_mem_size(pat->node.node_internal.right, b);
 }
 
-void pat_mem_size(Patricia pat, benchmark_t *b) {
-  benchmark_sum_mem_insertion(b, sizeof(pat_node)*pat_count_nodes(pat));
-}
+// void pat_mem_size(Patricia pat, benchmark_t *b) {
+//   benchmark_sum_mem_insertion(b, sizeof(pat_node)*pat_count_nodes(pat));
+// }
 
 void pat_remove_nodes(Patricia *pat) {
   if((*pat)==NULL) return;
 
   if (type_node((*pat)) == external) {
+    free((*pat)->node.key);
     free((*pat));
     *pat=NULL;
     return;
