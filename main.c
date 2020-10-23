@@ -52,6 +52,8 @@ int main () {
             case 1:
                 switch  (x) {
                     case 1:
+                        tst_remove_nodes(&tst); 
+
                         benchmark_init(&benchmark);
                         t = clock();
                         tst_ler_arquivo(&tst, &benchmark);
@@ -90,10 +92,9 @@ int main () {
             case 2:
                 switch  (x) {
                     case 1:
-                        //printf("Qual palavra deseja inserir?\n");
-                        //scanf("%s", palavra);
-                        //patricia = pat_insert(&patricia, palavra);
+                        pat_remove_nodes(&patricia);
                         benchmark_init(&benchmark);
+
                         t = clock();
                         patricia_ler_arquivo(&patricia, &benchmark);
                         t = clock() - t;
@@ -132,5 +133,8 @@ int main () {
             }
         }
     }
+
+    tst_remove_nodes(&tst); 
+    pat_remove_nodes(&patricia);
     return 0;
 }

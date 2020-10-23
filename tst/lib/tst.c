@@ -107,6 +107,15 @@ static int word_countT(TST root, int count) {
   
 }
 
+void tst_remove_nodes(TST *root) {
+  if ((*root) == NULL) return;
+  tst_remove_nodes(&(*root)->left);
+  tst_remove_nodes(&(*root)->middle);
+  tst_remove_nodes(&(*root)->right);
+  free((*root));
+  *root=NULL;
+}
+
 //Operação para contar o número de palavras em uma árvore TST
 int tst_word_count (TST root) {
   return word_countT(root, 0);
