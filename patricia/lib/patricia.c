@@ -160,10 +160,26 @@ Patricia pat_insert(Patricia* patricia, Item key, benchmark_t* b) {
 }
 
 int pat_count_nodes(Patricia pat) {
-  if (pat == NULL || type_node(pat) == external) return 0;
-  return 1 + pat_count_nodes(pat->node.node_internal.left) + pat_count_nodes(pat->node.node_internal.left);
+  if (pat == NULL) return 0;
+  if (type_node(pat) == external) return 1;
+  return 1 + pat_count_nodes(pat->node.node_internal.left) + pat_count_nodes(pat->node.node_internal.right);
 }
 
 void pat_mem_size(Patricia pat, benchmark_t *b) {
   benchmark_sum_mem_insertion(b, sizeof(pat_node)*pat_count_nodes(pat));
 }
+
+void pat_remove_nodes(Patricia *pat) {
+  if((*pat)==NULL) return;
+
+  if (type_node((*pat)) == external) {
+    free((*pat));
+    *pat=NULL;
+    return;
+  }
+
+  pat_remove_nodes(&(*pat)->node.node_internal.left);
+  pat_remove_nodes(&(*pat)->node.node_internal.right);
+  free((*pat));
+  *pat=NULL;
+} 

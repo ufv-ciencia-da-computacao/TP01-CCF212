@@ -23,4 +23,5 @@ int tst_search(TST *root, char *str, benchmark_t* b);
 void tst_print(TST root);
 int tst_word_count (TST root);
 void tst_mem_size(TST tst, benchmark_t *b);
+void tst_remove_nodes(TST *root);
 #endif

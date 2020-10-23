@@ -40,4 +40,5 @@ int pat_word_count (Patricia patricia);
 int pat_search(Patricia patricia, Item key, benchmark_t* b);
 Patricia pat_insert(Patricia* patricia, Item key, benchmark_t* b);
 void pat_mem_size(Patricia pat, benchmark_t *b);
+void pat_remove_nodes(Patricia *pat);
 #endif
