@@ -11,25 +11,31 @@
 #define D 8 // Depends on type of Item
 #define CHARACTERS 256
 
-
 typedef char* String;
 typedef int index_amp;
 
+//Enumeração que define o tipo de um nó, interno(0) ou externo(1)
 typedef enum {
   internal, external
 } node_type;
 
+/*
+estrutura base utilizada por uma árvore Patricia, a partir da implementação proposta por Ziviani
+Modificações: armazena caracter para comparação e índice em nós internos
+*/
 typedef struct pat_node_str* Patricia;
 typedef struct pat_node_str {
   node_type type;
   union {
+    //nó interno
     struct {
-      char character;
-      index_amp index;
+      char character; //armazena o caracter a ser comparado
+      index_amp index; //armazena o índice a ser comparado
       Patricia left;
       Patricia right;
     }node_internal;
-    String key;
+    //nó externo
+    String key; //armazena palavra
   }node;
 } pat_node;
 

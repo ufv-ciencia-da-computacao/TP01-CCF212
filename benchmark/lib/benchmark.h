@@ -1,9 +1,13 @@
+//Grupo Raiz
 #ifndef __BENCHMARK_H__
 #define __BENCHMARK_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 
+/*estrutura para facilitar o armazenamento
+e passagem de parâmetros para calculo de
+comparações e memória alocada*/
 typedef struct {
     int qtd_comp;
     size_t mem_insertion;

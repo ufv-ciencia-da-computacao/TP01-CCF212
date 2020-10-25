@@ -9,12 +9,15 @@
 
 typedef struct node_t *TST;
 
+/*
+estrutura base utilizada por uma árvore Trie TST, a partir da implementação proposta por Ziviani
+*/
 struct node_t {
   struct node_t *left;
   struct node_t *right;
   struct node_t *middle;
   char character;
-  int end_word;
+  int end_word; // 0 ou 1, 1 indica fim de palavra
 };
 
 void tst_node_init(TST *root, char ch);
