@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "./patricia/lib/patricia.h"
-#include "./tst/lib/tst.h"
+//#include "./patricia/lib/patricia.h"
+//#include "./tst/lib/tst.h"
 #include "leitura.c"
 
 int main () {
@@ -55,10 +55,8 @@ int main () {
                         tst_remove_nodes(&tst); 
 
                         benchmark_init(&benchmark);
-                        t = clock();
-                        tst_ler_arquivo(&tst, &benchmark);
-                        t = clock() - t;
-                        tempoTotal = ((double)t)/CLOCKS_PER_SEC;
+                        tst_ler_arquivo(&tst, &benchmark, &tempoTotal);
+                        tempoTotal = tempoTotal/CLOCKS_PER_SEC;
                 
                         benchmark_print_qtd_comp(benchmark);
                         tst_mem_size(tst, &benchmark);
@@ -95,10 +93,8 @@ int main () {
                         pat_remove_nodes(&patricia);
                         benchmark_init(&benchmark);
 
-                        t = clock();
-                        patricia_ler_arquivo(&patricia, &benchmark);
-                        t = clock() - t;
-                        tempoTotal = ((double)t)/CLOCKS_PER_SEC;
+                        patricia_ler_arquivo(&patricia, &benchmark, &tempoTotal);
+                        tempoTotal = tempoTotal/CLOCKS_PER_SEC;
                         
                         benchmark_print_qtd_comp(benchmark);
                         pat_mem_size(patricia, &benchmark);
