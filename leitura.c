@@ -5,8 +5,8 @@
 #include <ctype.h>
 #include <time.h>
 //#include "./benchmark/lib/benchmark.c"
-#include "./patricia/lib/patricia.c"
-#include "./tst/lib/tst.c"
+#include "./patricia/lib/patricia.h"
+#include "./tst/lib/tst.h"
 
 void tst_ler_arquivo (TST* tst, benchmark_t *b, double* temp) {
     FILE* arq;

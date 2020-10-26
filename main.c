@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-//#include "./patricia/lib/patricia.h"
-//#include "./tst/lib/tst.h"
+#include "./patricia/lib/patricia.h"
+#include "./tst/lib/tst.h"
 #include "leitura.c"
 
 int main () {

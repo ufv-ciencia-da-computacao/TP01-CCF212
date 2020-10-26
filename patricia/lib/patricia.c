@@ -1,6 +1,6 @@
 //Grupo Raiz
 #include "patricia.h"
-#include "../../benchmark/lib/benchmark.c"
+#include "../../benchmark/lib/benchmark.h"
 
 typedef struct {
   int index;
@@ -181,7 +181,12 @@ Patricia pat_insert(Patricia* patricia, String key, benchmark_t* b) {
       aux = aux->node.node_internal.left;
     }
   }
-  benchmark_sum_qtd_comp(b, 1);
+
+  if (strcmp(aux->node.key, key) == 0) {
+    return (*patricia);
+  }
+
+  benchmark_sum_qtd_comp(b, 2);
 
   tuple_t tuple = get_char(key, aux->node.key, b);
 

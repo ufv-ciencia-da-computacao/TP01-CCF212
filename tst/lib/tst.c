@@ -17,27 +17,25 @@ void tst_node_init(TST *root, char ch) {
 static void insert(TST *root, char* str, int pos, int len, benchmark_t *b) {
   benchmark_sum_qtd_comp(b, 1); //chamada para contagem de comparações
   if ((*root) == NULL) {
-      tst_node_init(root, str[pos]); //Caso base: árvore vazia ou posição com nó nulo, inicia um novo nó
-    }
-
-  benchmark_sum_qtd_comp(b, 1);
-  if (pos == len) {
-    (*root)->end_word = 1; //Se chegar ao final da palavra, muda o flag 'end_word' para 1
-    return;
+    tst_node_init(root, str[pos]); //Caso base: árvore vazia ou posição com nó nulo, inicia um novo nó
   }
 
   /*Enquanto não chega ao fim da palavra, chama-se recursivamente para o meio,
   para a direita ou para esqueda até que todos os caracteres sejam inseridos
   na posição correta*/
-  if (str[pos] == (*root)->character) {
+  if (str[pos] > (*root)->character) {
     benchmark_sum_qtd_comp(b, 1);
-    insert(&(*root)->middle, str, pos+1, len, b);
-  } else if (str[pos] > (*root)->character) {
-    benchmark_sum_qtd_comp(b, 2);
     insert(&(*root)->right, str, pos, len, b);
-  } else {
+  } else if (str[pos] < (*root)->character) {
     benchmark_sum_qtd_comp(b, 2);
     insert(&(*root)->left, str, pos, len, b);
+  } else {
+    benchmark_sum_qtd_comp(b, 3);
+    if (pos == (len-1)) {
+      (*root)->end_word = 1; //Se chegar ao final da palavra, muda o flag 'end_word' para 1
+      return;
+    }
+    insert(&(*root)->middle, str, pos+1, len, b);
   }
   
 }
@@ -81,18 +79,17 @@ int tst_search(TST *root, char *str, benchmark_t* b) {
 //Operação interna para impressão em ordem
 void print_tst(TST root, char* word, int pos) {
   if (root == NULL) {
-    pos=0;
     return;
   }
 
   print_tst(root->left, word, pos);
 
-  strncat(word, &root->character, sizeof(char)); //armazena em 'word' o caracter atual
-  if(root->end_word) puts(word); //imprime a palavra salva em 'word' sempre que encontra um fim de palavra (end_word==1)
-  
+  word[pos] = root->character; //armazena em 'word' o caracter atual
+  if(root->end_word) { 
+    word[pos+1] = '\0';
+    puts(word); //imprime a palavra salva em 'word' sempre que encontra um fim de palavra (end_word==1)
+  }
   print_tst(root->middle, word, pos+1);
-  word[pos] = '\0';
-
   print_tst(root->right, word, pos); 
 }
 
