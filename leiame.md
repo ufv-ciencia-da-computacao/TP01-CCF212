@@ -1,4 +1,5 @@
-Utilização:
+# Utilização
 O programa foi construído para que seu uso seja bastante intuitivo. Ao compilar e rodar o programa, será apresentado um menu geral onde pode-se escolher uma estrutura árvore que se deseja utilizar. Escolhida a estrutura, aparecerá um menu específico para essa árvore, onde você pode ler um arquivo, pesquisar uma palavra, exibir em ordem alfabética, contar palavras, voltar ao menu geral para escolher outra árvore ou sair do programa. É interessante apontar que, como implementamos a função de remoção, toda vez que se escolhe ler um novo arquivo a árvore previamente carregada é apagada da memória. Isso permite que o programa não precise ser interrompido em momento algum da execução. Para escolher as opções, basta digitar o número referente à opção desejada.
-Testes:
+
+# Testes
 Na pasta cenarios, há diferentes cenários de teste que podem ser utilizados para verificar os valores obtidos em nosso trabalho. Os arquivos estão nomeados como cenario1-0.txt, por exemplo. Os arquivos que terminam em zero estão em ordem alfabética, enquanto os arquivos terminados em 1 ou 2 estão desordenados. No total são 5 cenários, com nome variando de cenario1 a cenario5. O menor cenário (cenario1) tem 500 palavras, enquanto o maior (cenario5) possui 416.392 palavras.
