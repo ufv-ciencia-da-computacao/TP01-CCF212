@@ -33,9 +33,9 @@ static void insert(TST *root, char* str, int pos, int len, benchmark_t *b) {
     benchmark_sum_qtd_comp(b, 3);
     if (pos == (len-1)) {
       (*root)->end_word = 1; //Se chegar ao final da palavra, muda o flag 'end_word' para 1
-      return;
+    } else {
+      insert(&(*root)->middle, str, pos+1, len, b);
     }
-    insert(&(*root)->middle, str, pos+1, len, b);
   }
   
 }
@@ -51,23 +51,22 @@ static int search(TST *root, char *str, int pos, int len, benchmark_t* b) {
   if ((*root) == NULL) {
     return 0; //Caso base (Palavra não está na árvore ou árvore vazia)
   }
-  benchmark_sum_qtd_comp(b, 2);
-  if (pos == len && (*root)->end_word == 1) {
-    return 1; //Retorno caso a palavra procurada seja encontrada
-  }
 
   /*Testa se o caracter da palavra procurada é igual, menor ou maior
   que a chave atual e faz a chamada recursiva de acordo com a resposta:
   pelo meio caso seja igual, direita se maior, esquerda se menor*/
-  if (str[pos] == (*root)->character) {
+  if (str[pos] < (*root)->character) {
     benchmark_sum_qtd_comp(b, 1);
-    return search(&(*root)->middle, str, pos+1, len, b);
+    return search(&(*root)->left, str, pos, len, b);
   } else if (str[pos] > (*root)->character) {
     benchmark_sum_qtd_comp(b, 2);
     return search(&(*root)->right, str, pos, len, b);
   } else {
-    benchmark_sum_qtd_comp(b, 2);
-    return search(&(*root)->left, str, pos, len, b);
+    benchmark_sum_qtd_comp(b, 4);
+    if (pos == len-1 && (*root)->end_word == 1) {
+      return 1; //Retorno caso a palavra procurada seja encontrada
+    }
+    return search(&(*root)->middle, str, pos+1, len, b);
   }
 }
 
